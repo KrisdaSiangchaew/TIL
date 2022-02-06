@@ -14,7 +14,7 @@ enum CreateAcronym {
                 .id()
                 .field(AcronymModel.FieldKeys.v1.short, .string, .required)
                 .field(AcronymModel.FieldKeys.v1.long, .string, .required)
-                .field(AcronymModel.FieldKeys.v1.userID, .uuid, .required)
+                .field(AcronymModel.FieldKeys.v1.userID, .uuid, .required, .references(UserModel.schema, "id"))
                 .create()
         }
         
