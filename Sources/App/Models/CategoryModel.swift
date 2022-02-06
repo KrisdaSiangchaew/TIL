@@ -19,6 +19,7 @@ final class CategoryModel: Model {
     
     @ID var id: UUID?
     @Field(key: FieldKeys.v1.name) var name: String
+    @Siblings(through: AcronymCategoryPivotModel.self.self, from: \.$category, to: \.$acronym) var acronyms: [AcronymModel]
     
     init() { }
     
