@@ -23,6 +23,7 @@ struct AcronymsController: RouteCollection {
         acronymsRoutes.get(":id", "user", use: getUserHandler)
         acronymsRoutes.post(":acronymID", "categories", ":categoryID", use: addCategoryHandler)
         acronymsRoutes.get(":id", "categories", use: getCategoryHandler)
+        acronymsRoutes.delete(":id", "categories", ":categoryID", use: removeCategoriesHandler)
     }
     
     func createHandler(_ req: Request) async throws -> AcronymModel {
@@ -96,6 +97,17 @@ struct AcronymsController: RouteCollection {
             throw Abort(.notFound)
         }
         return try await acronymQuery.$categories.query(on: req.db).all()
+    }
+    
+    func removeCategoriesHandler(_ req: Request) async throws -> HTTPStatus {
+        guard let acronymQuery = try await AcronymModel.find(req.parameters.get("id"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+        guard let categoryQuery = try await CategoryModel.find(req.parameters.get("categoryID"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+        try await acronymQuery.$categories.detach(categoryQuery, on: req.db)
+        return .noContent
     }
 }
 
