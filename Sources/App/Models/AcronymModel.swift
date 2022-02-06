@@ -26,7 +26,7 @@ final class AcronymModel: Model {
     
     init() { }
     
-    init(id: UUID? = nil, short: String, long: String, userID: UUID) {
+    init(id: UUID? = nil, short: String, long: String, userID: UserModel.IDValue) {
         self.id = id
         self.short = short
         self.long = long
