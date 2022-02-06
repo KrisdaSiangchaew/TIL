@@ -23,6 +23,7 @@ final class AcronymModel: Model {
     @Field(key: FieldKeys.v1.short) var short: String
     @Field(key: FieldKeys.v1.long) var long: String
     @Parent(key: FieldKeys.v1.userID) var user: UserModel
+    @Siblings(through: AcronymCategoryPivotModel.self, from: \.$acronym, to: \.$category) var categories: [CategoryModel]
     
     init() { }
     
