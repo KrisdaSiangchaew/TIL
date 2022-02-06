@@ -22,6 +22,7 @@ struct AcronymsController: RouteCollection {
         acronymsRoutes.get("sorted", use: sortedHandler)
         acronymsRoutes.get(":id", "user", use: getUserHandler)
         acronymsRoutes.post(":acronymID", "categories", ":categoryID", use: addCategoryHandler)
+        acronymsRoutes.get(":id", "categories", use: getCategoryHandler)
     }
     
     func createHandler(_ req: Request) async throws -> AcronymModel {
@@ -88,6 +89,13 @@ struct AcronymsController: RouteCollection {
         guard let categoryQuery = try await CategoryModel.find(req.parameters.get("categoryID"), on: req.db) else { throw Abort(.notFound) }
         try await acronymQuery.$categories.attach(categoryQuery, on: req.db)
         return .created
+    }
+    
+    func getCategoryHandler(_ req: Request) async throws -> [CategoryModel] {
+        guard let acronymQuery = try await AcronymModel.find(req.parameters.get("id"), on: req.db) else {
+            throw Abort(.notFound)
+        }
+        return try await acronymQuery.$categories.query(on: req.db).all()
     }
 }
 
